@@ -32,7 +32,7 @@ typedef struct {
   int continue_ignite[2];
   int colors_size;
   int delay_on;
-  int delay_off
+  int post_delay
 } GarlandStep;
 
 typedef struct {
@@ -57,11 +57,6 @@ typedef struct {
 #define digital_write(GPIO, pin, value) HAL_GPIO_WritePin(GPIO, pin, value)
 #define digital_read(GPIO, pin) !HAL_GPIO_ReadPin(GPIO, pin)
 
-#define leds_off \
-  digital_write(GPIOD, GREEN, 0); \
-  digital_write(GPIOD, RED, 0);   \
-  digital_write(GPIOD, YELLOW, 0);
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -82,10 +77,10 @@ static Garland mode_0 = {
 
 static Garland mode_1 = {
   .garland_steps = {
-    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .delay_off = 250},
-    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .delay_off = 250},
-    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .delay_off = 250},
-    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .delay_off = 250},
+    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .post_delay = 250},
+    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .post_delay = 250},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .post_delay = 250},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 250, .post_delay = 250},
     {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250},
     {.colors = {YELLOW}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250},
     {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250},
@@ -96,27 +91,27 @@ static Garland mode_1 = {
 
 static Garland mode_2 = {
   .garland_steps = {
-    {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 500, .delay_off = 250},
-    {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250, .delay_off = 125},
-    {.colors = {GREEN}, .continue_ignite = {1}, .colors_size = 1, .delay_on = 250, .delay_off = 500},
-    {.colors = {RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 500, .delay_off = 250},
-    {.colors = {RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250, .delay_off = 125},
-    {.colors = {RED}, .continue_ignite = {1}, .colors_size = 1, .delay_on = 250, .delay_off = 500},
-    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_off = 500},
+    {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 500, .post_delay = 250},
+    {.colors = {GREEN}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250, .post_delay = 125},
+    {.colors = {GREEN}, .continue_ignite = {1}, .colors_size = 1, .delay_on = 250, .post_delay = 500},
+    {.colors = {RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 500, .post_delay = 250},
+    {.colors = {RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 250, .post_delay = 125},
+    {.colors = {RED}, .continue_ignite = {1}, .colors_size = 1, .delay_on = 250, .post_delay = 500},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .post_delay = 500},
   },
   .size = 7,
 };
 
 static Garland mode_3 = {
   .garland_steps = {
-    {.colors = {GREEN, RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, RED}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, YELLOW}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, YELLOW}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN,YELLOW}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75},
-    {.colors = {GREEN, YELLOW}, .continue_ignite = {0}, .colors_size = 1, .delay_on = 75, .delay_off = 75}
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, RED}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN,YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75},
+    {.colors = {GREEN, YELLOW}, .continue_ignite = {0, 0}, .colors_size = 2, .delay_on = 75, .post_delay = 75}
   },
   .size = 7,
 };
@@ -124,7 +119,6 @@ static Garland mode_3 = {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-int polling_delay(uint32_t millis, int (*poll)(void));
 static void MX_GPIO_Init(void);
 void garland_ignite(Garland* garland);
 /* USER CODE BEGIN PFP */
@@ -141,6 +135,9 @@ int button_processing() {
       if (digital_read(GPIOC, BTN_PIN_NUM)) {   // кнопки. 20 мс оказалось достаточно
         mode = mode < MODE_MAX ? mode + 1 : 0;
         prev_state = 1;
+        digital_write(GPIOD, GREEN, 0);
+        digital_write(GPIOD, RED, 0);
+        digital_write(GPIOD, YELLOW, 0);
         return 1;
       }
     }
@@ -188,38 +185,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1) {
     /* USER CODE END WHILE */
-    digital_write(GPIOD, GREEN, 0);
-    digital_write(GPIOD, RED, 0);
-    digital_write(GPIOD, YELLOW, 0);
     button_processing();
 
     switch (mode) {
       case 0: garland_ignite(&mode_0); break;
       case 1: garland_ignite(&mode_1); break;
       case 2: garland_ignite(&mode_2); break;
+      case 3: garland_ignite(&mode_3); break;
       default: break;
     }
   }
   /* USER CODE END 3 */
 }
 
-#define check(func) if (func) return;
+#define CHECK_TIME(label, delay) \
+  state++;        \
+  last_time = HAL_GetTick(); \
+  label:      \
+  if (HAL_GetTick() - last_time < delay) return; \
 
 void garland_ignite(Garland* garland) {
-  for (int i = garland->current_step; i < garland->size; i++) {
-    for(int j = 0; j < garland->garland_steps[i].colors_size; j++)
-      digital_write(GPIOD, garland->garland_steps[i].colors[j], 1);
+  static int state = 0;
+  static uint32_t last_time;
+  int i = garland->current_step;
+  
+  if (state == 1) goto delay_on;
+  else if (state == 2) goto post_delay;
 
-    check(polling_delay(garland->garland_steps[i].delay_on, button_processing));
+  for(int j = 0; j < garland->garland_steps[i].colors_size; j++)
+    digital_write(GPIOD, garland->garland_steps[i].colors[j], 1);
 
-    for(int j = 0; j < garland->garland_steps[i].colors_size; j++)
-      digital_write(GPIOD, garland->garland_steps[i].colors[j], garland->garland_steps[i].continue_ignite[j]);
+  CHECK_TIME(delay_on, garland->garland_steps[i].delay_on)
 
-    check(polling_delay(garland->garland_steps[i].delay_off, button_processing));
+  for(int j = 0; j < garland->garland_steps[i].colors_size; j++)
+    digital_write(GPIOD, garland->garland_steps[i].colors[j], garland->garland_steps[i].continue_ignite[j]);
 
-    garland->current_step++;
-  }
-  garland->current_step = 0;
+  CHECK_TIME(post_delay, garland->garland_steps[i].post_delay)
+
+  garland->current_step = garland->current_step >= garland->size ? 0 : garland->current_step + 1;
+  state = 0;
 }
 
 /**
@@ -313,18 +317,6 @@ void Error_Handler(void)
   {
   }
   /* USER CODE END Error_Handler_Debug */
-}
-
-int polling_delay(uint32_t millis, int (*poll)(void)) {
-  uint32_t delay = 100;
-  uint32_t iterations = millis / delay;
-  for (int i = 0; i < iterations; i++) {
-    HAL_Delay(delay);
-    if (poll()) return 1;
-  }
-
-  HAL_Delay(millis % 100);
-  return 0;
 }
 
 #ifdef  USE_FULL_ASSERT
