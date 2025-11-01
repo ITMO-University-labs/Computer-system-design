@@ -4,11 +4,11 @@
 #define RED GPIO_PIN_15
 #define YELLOW GPIO_PIN_14
 #define GREEN GPIO_PIN_13
-#define MODE_MAX 8
+#define MODE_COUNT 8
 
 typedef struct {
   int colors[2];
-  int continue_ignite[2];
+  int freeze[2];
   int colors_size;
   int delay_on;
   int post_delay
@@ -22,7 +22,8 @@ typedef struct {
 
 extern int cur_mode;
 extern int mode_max;
-extern Garland garlands[MODE_MAX];
+extern int prev_mode;
+extern Garland garlands[MODE_COUNT];
 
 int garland_button_processing();
 void garland_ignite();
