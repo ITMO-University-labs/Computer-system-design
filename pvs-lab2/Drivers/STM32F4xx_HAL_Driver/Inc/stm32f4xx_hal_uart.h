@@ -197,7 +197,7 @@ typedef struct __UART_HandleTypeDef
   void (* MspDeInitCallback)(struct __UART_HandleTypeDef *huart);         /*!< UART Msp DeInit callback              */
 #endif  /* USE_HAL_UART_REGISTER_CALLBACKS */
 
-} UART_HandleTypeDef;
+} UART_HandleTypeDef; 
 
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1)
 /**

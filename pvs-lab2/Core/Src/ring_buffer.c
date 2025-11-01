@@ -1,6 +1,4 @@
-#include "ring_queue.h"
-
-#define MAX_BUFFER 32
+#include "ring_buffer.h"
 
 int rb_write(RingBuffer* buf, char element) {
     buf->elements[buf->head] = element;

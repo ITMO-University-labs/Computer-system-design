@@ -2,6 +2,7 @@
 #include "stm32_io.h"
 #include "garland.h"
 #include "stdlib.h"
+#include "stm32f427xx.h"
 
 #define MAX_LEN 32
 
@@ -9,18 +10,26 @@ static char command[MAX_LEN] = {0};
 static int command_step = 0;
 static Garland new_garland = {0};
 
-// static void command_new_garland();
 static void command_set_garland();
 static void command_new_garland();
 static void command_new_garland_0();
 static void command_new_garland_1();
+static void command_set_interrupts ();
 
 void command_execute() {
+  if (input[0] == '\0')
+    return;
+
   if (command_step == 0)
     memcpy(command, input, sizeof(command));
-  if (!strncmp(command, "set ", 4))
-    command_set_garland();
-  else if (!strncmp(command, "new ", 4))
+    
+  if (!strncmp(command, "set", 3)) {
+    if (!strncmp(command + 3, " interrupts", 11))
+        command_set_interrupts();
+    else
+        command_set_garland();
+  }
+  else if (!strncmp(command, "new", 3))
     command_new_garland();
   else
     xprintf("Unknown command!\n");
@@ -84,6 +93,7 @@ static void command_new_garland_0() {
   xprintf("Enter diodes duration:\n");
   command_step++;
 }
+
 static void command_new_garland_1() {
   static int next_mode = 4;
 
@@ -110,3 +120,16 @@ static void command_new_garland_1() {
   command_step = 0;
   xprintf("Successfully added new mode.\n");
 } 
+
+static void command_set_interrupts () {
+    if (!strcmp(command + 15, "on")) {
+        set_interrupts(1);
+        xprintf("Enable interupts.\n");
+    }
+    else if (!strcmp(command + 15, "off")) {
+        set_interrupts(0);
+        xprintf("Disable interupts.\n");
+    }
+    else
+        xprintf("Unknown parameter '%s'. Possible: on, off.\n", command + 15);
+}

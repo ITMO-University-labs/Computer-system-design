@@ -91,7 +91,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   start_receive_char_it();
-  char c;
 
   /* USER CODE END 2 */
 
