@@ -33,6 +33,9 @@ void command_execute() {
     command_new_garland();
   else
     xprintf("Unknown command!\n");
+
+  if (command_step == 0)
+    clear_input();
 }
 
 static void command_set_garland() {

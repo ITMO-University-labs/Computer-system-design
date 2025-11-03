@@ -100,9 +100,11 @@
     - +:test/**
     - -:test/support
   :source:
-    - Core/src/**
+    - Drivers/**
+    - Core/Src/**
   :include:
-    - Core/inc/** # In simple projects, this entry often duplicates :source
+    - Drivers/**
+    - Core/Inc/** # In simple projects, this entry often duplicates :source
   :support:
     - test/support
   :libraries: []
@@ -121,6 +123,7 @@
 #  - Specifiying symbols used during test preprocessing
 :defines:
   :test:
+    - STM32F427xx
     - TEST # Simple list option to add symbol 'TEST' to compilation of all files in all test executables
   :release: []
 
