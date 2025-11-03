@@ -1,4 +1,4 @@
- #include "usart.h"
+#include "usart.h"
 #include "string.h"
 #include "stdarg.h"
 #include "stdio.h"
@@ -131,14 +131,12 @@ void set_interrupts(int val) {
   interrupts_on = val;
 
   if (val) {
-    __HAL_UART_ENABLE_IT(&huart6, UART_IT_RXNE);
-    __HAL_UART_ENABLE_IT(&huart6, UART_IT_ERR);
+    HAL_NVIC_EnableIRQ(USART6_IRQn);
     HAL_UART_Receive_IT(&huart6, &uart_buf, 1);
   } else {
-    __HAL_UART_DISABLE_IT(&huart6, UART_IT_RXNE);
-    __HAL_UART_DISABLE_IT(&huart6, UART_IT_ERR);
-    huart6.RxState = HAL_UART_STATE_READY;
-    huart6.gState = HAL_UART_STATE_READY;
+    HAL_UART_AbortReceive(&huart6);
+    HAL_UART_AbortTransmit(&huart6);
+    HAL_NVIC_DisableIRQ(USART6_IRQn);
   }
 }
 

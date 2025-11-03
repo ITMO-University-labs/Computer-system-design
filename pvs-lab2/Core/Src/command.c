@@ -14,7 +14,7 @@ static void command_set_garland();
 static void command_new_garland();
 static void command_new_garland_0();
 static void command_new_garland_1();
-static void command_set_interrupts ();
+static void command_set_interrupts();
 
 void command_execute() {
   if (input[0] == '\0')
@@ -131,7 +131,7 @@ static void command_set_interrupts () {
     }
     else if (!strcmp(command + 15, "off")) {
         set_interrupts(0);
-        xprintf("Disable interupts.\n");
+        xprintf("\nDisable interupts.\n");
     }
     else
         xprintf("Unknown parameter '%s'. Possible: on, off.\n", command + 15);
