@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -26,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32_io.h"
 #include "pult.h"
+#include "keyboard.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,13 +41,15 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define BTN_PIN_NUM GPIO_PIN_15
+#define digital_read(GPIO, pin) !HAL_GPIO_ReadPin(GPIO, pin)
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static int prev_button_state = 0;
+static int mode = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,6 +60,22 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+int button_processing() {
+  if (digital_read(GPIOC, BTN_PIN_NUM)) {
+    if (!prev_button_state) {
+      HAL_Delay(20);                                 // задержка с целью избавиться от дребезга контактов
+      if (digital_read(GPIOC, BTN_PIN_NUM)) {   // кнопки. 20 мс оказалось достаточно
+        mode = (mode + 1) % 2;
+        prev_button_state = 1;
+        return 1;
+      }
+    }
+  } else
+      prev_button_state = 0;
+  
+  return 0;
+}
 
 /* USER CODE END 0 */
 
@@ -89,21 +109,32 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   MX_USART6_UART_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+
+  char keys[4][3] = {
+    {'1', '2', '3'},
+    {'4', '5', '6'},
+    {'7', '8', '9'},
+    {'*', '0', '#'}
+  };
+
+  keyboard_set_keys(keys);
   char c;
-  start_receive_char_it();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    if (try_get_received_char(&c)) {
-      start_receive_char_it();
+    button_processing();
+    c = keyboard_get_key();
+    if (c != '\0' && mode == 0)
       pult_execute(c);
-    }
+    else
+      xprintf("%c\n", c);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -155,7 +186,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {

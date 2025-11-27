@@ -44,7 +44,7 @@ void pult_execute(char button) {
         xprintf("All leds switched off.\n");
         led_off();
       }
-      else if (button == '\r') {
+      else if (button == '#') {
         pult_step++;
         xprintf("Switch to settings mode. Enter from 1 to 9.\n");
       }
@@ -54,32 +54,33 @@ void pult_execute(char button) {
       if (button >= '1' && button <= '9') {
         pos = button - '1';
         pult_step++;
-        xprintf("Enter a (green), b (yellow) or c (red).\n");
+        xprintf("Enter 1 (green), 2 (yellow) or 3 (red).\n");
       }
+      break;
      
     case 2:
-      if (button >= 'a' && button <= 'c') {
+      if (button >= '1' && button <= '3') {
         switch (button) {
-          case 'a': buffer_led_settings.color = GREEN; break;
-          case 'b': buffer_led_settings.color = YELLOW; break;
-          case 'c': buffer_led_settings.color = RED; break;
+          case '1': buffer_led_settings.color = GREEN; break;
+          case '2': buffer_led_settings.color = YELLOW; break;
+          case '3': buffer_led_settings.color = RED; break;
         }
         buffer_led_settings.brightness = led_settings[pos].brightness;
         pult_step++;
-        xprintf("Enter + to increase brightness by 10, or - to decrease by 10.\n");
+        xprintf("Enter 1 to increase brightness by 10, or 2 to decrease by 10.\n");
       }
       break;
 
     case 3:
-      if (button == '+' && buffer_led_settings.brightness < 100) {
+      if (button == '1' && buffer_led_settings.brightness < 100) {
         buffer_led_settings.brightness += 10;
         xprintf("Set %d%%. Press 'Enter' to save.\n", buffer_led_settings.brightness);
       }
-      else if (button == '-' && buffer_led_settings.brightness > 0) {
+      else if (button == '2' && buffer_led_settings.brightness > 0) {
         buffer_led_settings.brightness -= 10;
         xprintf("Set %d%%. Press 'Enter' to save.\n", buffer_led_settings.brightness);
       }
-      else if (button == '\r') {
+      else if (button == '#') {
         led_settings[pos] = buffer_led_settings;
         pult_step = 0;
         xprintf("Saved to mode %d.\n", pos + 1);
