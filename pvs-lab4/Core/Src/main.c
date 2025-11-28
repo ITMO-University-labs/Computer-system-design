@@ -67,6 +67,10 @@ int button_processing() {
       HAL_Delay(20);                                 // задержка с целью избавиться от дребезга контактов
       if (digital_read(GPIOC, BTN_PIN_NUM)) {   // кнопки. 20 мс оказалось достаточно
         mode = (mode + 1) % 2;
+        if (mode == 0)
+          xprintf("Switch to application mode.\n");
+        else
+          xprintf("Switch to testing mode.\n");
         prev_button_state = 1;
         return 1;
       }
